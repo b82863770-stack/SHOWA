@@ -15,11 +15,9 @@
     :root {
       --bg-color: #0b0b0b;
       --card-bg: #141414;
-      --accent-color: #e50914; /* أحمر سينمائي */
-      --accent-hover: #b90910;
+      --accent-color: #e50914;
       --text-color: #ffffff;
       --text-secondary: #aaaaaa;
-      --nav-bg: #111111;
     }
 
     * {
@@ -36,7 +34,6 @@
       padding-bottom: 40px;
     }
 
-    /* الهيدر العلوي */
     header {
       position: sticky;
       top: 0;
@@ -58,7 +55,6 @@
       letter-spacing: 2px;
     }
 
-    /* مربع البحث */
     .search-container {
       padding: 15px 20px 5px 20px;
     }
@@ -72,21 +68,15 @@
       color: var(--text-color);
       font-size: 15px;
       outline: none;
-      transition: border-color 0.3s;
     }
 
-    .search-box:focus {
-      border-color: var(--accent-color);
-    }
-
-    /* أشرطة التبويب بالأعلى (الأقسام على طريقة سينما بوكس) */
     .categories-bar {
       display: flex;
       gap: 10px;
       padding: 15px 20px;
       overflow-x: auto;
       white-space: nowrap;
-      scrollbar-width: none; /* إخفاء شريط التمرير */
+      scrollbar-width: none;
     }
 
     .categories-bar::-webkit-scrollbar {
@@ -102,7 +92,6 @@
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
     }
 
     .tab-btn.active {
@@ -120,7 +109,6 @@
       padding-right: 10px;
     }
 
-    /* شبكة العرض */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
@@ -136,11 +124,6 @@
       flex-direction: column;
       cursor: pointer;
       position: relative;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .card:active {
-      transform: scale(0.95);
     }
 
     .card img {
@@ -186,7 +169,7 @@
       color: var(--text-secondary);
     }
 
-    /* شاشة المشغل (Player Modal) */
+    /* Player Modal */
     .player-modal {
       display: none;
       position: fixed;
@@ -200,22 +183,45 @@
     }
 
     .player-header {
-      padding: 15px;
+      padding: 12px 15px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       background: #111;
       border-bottom: 1px solid #222;
+      gap: 10px;
     }
 
     .close-btn {
       background: var(--accent-color);
       color: #fff;
       border: none;
-      padding: 8px 16px;
+      padding: 6px 14px;
       border-radius: 6px;
       font-weight: bold;
       cursor: pointer;
+    }
+
+    .server-btn {
+      background: #222;
+      color: #fff;
+      border: 1px solid #444;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .external-btn {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      text-decoration: none;
+      font-weight: bold;
+      display: inline-block;
     }
 
     .iframe-container {
@@ -237,12 +243,10 @@
     <h1>SHOWA</h1>
   </header>
 
-  <!-- البحث -->
   <div class="search-container">
     <input type="text" id="searchInput" class="search-box" placeholder="ابحث عن فيلم، مسلسل، أو أنمي..." />
   </div>
 
-  <!-- أقسام سينما بوكس -->
   <div class="categories-bar">
     <button class="tab-btn active" onclick="switchCategory('popular', this)">🔥 الأكثر شهرة</button>
     <button class="tab-btn" onclick="switchCategory('movies', this)">🎬 أفلام</button>
@@ -256,14 +260,18 @@
   <div id="loading">جاري جلب المحتوى...</div>
   <div class="grid" id="moviesGrid"></div>
 
-  <!-- مشغل الفيديو -->
+  <!-- المشغل المطور -->
   <div class="player-modal" id="playerModal">
     <div class="player-header">
-      <span id="playerTitle" style="font-size: 14px; font-weight: bold; color: #fff;"></span>
-      <button class="close-btn" onclick="closePlayer()">إغلاق ✕</button>
+      <span id="playerTitle" style="font-size: 13px; font-weight: bold; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 30%;"></span>
+      <div style="display: flex; gap: 6px; align-items: center;">
+        <button class="server-btn" id="switchServerBtn" onclick="toggleServer()">تبديل السيرفر 🔄</button>
+        <a id="externalPlayerLink" href="#" target="_blank" class="external-btn">تشغيل خارجي ↗</a>
+        <button class="close-btn" onclick="closePlayer()">إغلاق ✕</button>
+      </div>
     </div>
     <div class="iframe-container">
-      <iframe id="videoPlayer" src="" allowfullscreen></iframe>
+      <iframe id="videoPlayer" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
     </div>
   </div>
 
@@ -279,8 +287,11 @@
     const playerModal = document.getElementById('playerModal');
     const videoPlayer = document.getElementById('videoPlayer');
     const playerTitle = document.getElementById('playerTitle');
+    const externalPlayerLink = document.getElementById('externalPlayerLink');
 
     let currentCategory = 'popular';
+    let currentMedia = { id: '', type: '' };
+    let currentServerIndex = 0;
 
     async function fetchMovies(endpoint, query = '') {
       loading.style.display = 'block';
@@ -330,7 +341,43 @@
       });
     }
 
-    // التنقل بين الأقسام
+    function openPlayer(id, type, title) {
+      currentMedia = { id, type };
+      currentServerIndex = 0;
+      playerTitle.innerText = title;
+      
+      loadServer();
+      playerModal.style.display = 'flex';
+    }
+
+    function loadServer() {
+      const { id, type } = currentMedia;
+      let url = '';
+      
+      if (currentServerIndex === 0) {
+        // سيرفر VidLink الموثوق
+        url = type === 'movie' 
+          ? `https://vidlink.pro/movie/${id}` 
+          : `https://vidlink.pro/tv/${id}/1/1`;
+      } else {
+        // سيرفر VidSrc الاحتياطي
+        url = `https://vidsrc.pro/embed/${type}/${id}`;
+      }
+
+      videoPlayer.src = url;
+      externalPlayerLink.href = url;
+    }
+
+    function toggleServer() {
+      currentServerIndex = currentServerIndex === 0 ? 1 : 0;
+      loadServer();
+    }
+
+    function closePlayer() {
+      playerModal.style.display = 'none';
+      videoPlayer.src = '';
+    }
+
     function switchCategory(type, btnElement) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       btnElement.classList.add('active');
@@ -348,26 +395,13 @@
         fetchMovies('/discover/tv');
       } else if (type === 'anime') {
         sectionTitle.innerText = 'عالم الأنمي';
-        fetchMovies('/discover/tv', '', '&with_genres=16'); // قسم الأنمي/الرسوم المتحركة
+        fetchMovies('/discover/tv', '', '&with_genres=16');
       } else if (type === 'top_rated') {
         sectionTitle.innerText = 'الأعلى تقييماً';
         fetchMovies('/movie/top_rated');
       }
     }
 
-    // تشغيل الفيديو
-    function openPlayer(id, type, title) {
-      playerTitle.innerText = title;
-      videoPlayer.src = `https://vidsrc.pro/embed/${type}/${id}`;
-      playerModal.style.display = 'flex';
-    }
-
-    function closePlayer() {
-      playerModal.style.display = 'none';
-      videoPlayer.src = '';
-    }
-
-    // البحث
     let timer;
     searchInput.addEventListener('input', (e) => {
       clearTimeout(timer);
@@ -383,7 +417,6 @@
       }, 400);
     });
 
-    // التحميل المبدئي
     fetchMovies('/movie/popular');
   </script>
 
