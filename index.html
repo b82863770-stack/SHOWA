@@ -3,766 +3,122 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>SHOWA - السينما الخاصة بك</title>
-  
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="SHOWA">
-
+  <title>SHOWA</title>
   <style>
-    :root {
-      --bg-color: #0d0e12;
-      --card-bg: #181a20;
-      --accent-color: #e50914;
-      --accent-hover: #b80710;
-      --text-color: #ffffff;
-      --text-secondary: #a0a0a0;
-      --border-color: #262932;
-      --input-bg: #121418;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      padding-bottom: 50px;
-      min-height: 100vh;
-    }
-
-    header {
-      position: sticky;
-      top: 0;
-      background: rgba(13, 14, 18, 0.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 100;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .logo {
-      font-size: 26px;
-      font-weight: 900;
-      color: var(--accent-color);
-      letter-spacing: 2px;
-      text-decoration: none;
-    }
-
-    .admin-toggle-btn {
-      background-color: var(--accent-color);
-      color: #fff;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: bold;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: 0.2s;
-    }
-
-    .admin-toggle-btn:hover {
-      background-color: var(--accent-hover);
-    }
-
-    .search-container {
-      padding: 15px 20px 5px 20px;
-    }
-
-    .search-box {
-      width: 100%;
-      padding: 12px 16px;
-      border-radius: 10px;
-      border: 1px solid var(--border-color);
-      background-color: var(--card-bg);
-      color: var(--text-color);
-      font-size: 14px;
-      outline: none;
-      transition: 0.2s;
-    }
-
-    .search-box:focus {
-      border-color: var(--accent-color);
-    }
-
-    .categories-bar {
-      display: flex;
-      gap: 10px;
-      padding: 15px 20px;
-      overflow-x: auto;
-      white-space: nowrap;
-      scrollbar-width: none;
-    }
-
-    .categories-bar::-webkit-scrollbar {
-      display: none;
-    }
-
-    .tab-btn {
-      background-color: var(--card-bg);
-      color: var(--text-secondary);
-      border: 1px solid var(--border-color);
-      padding: 8px 18px;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .tab-btn.active {
-      background-color: var(--accent-color);
-      color: #fff;
-      border-color: var(--accent-color);
-      box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3);
-    }
-
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 10px 20px 15px 20px;
-    }
-
-    .section-title {
-      font-size: 18px;
-      font-weight: 700;
-      border-right: 4px solid var(--accent-color);
-      padding-right: 10px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
-      gap: 14px;
-      padding: 0 20px;
-    }
-
-    .card {
-      background-color: var(--card-bg);
-      border-radius: 10px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      cursor: pointer;
-      position: relative;
-      border: 1px solid var(--border-color);
-      transition: transform 0.2s, border-color 0.2s;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      border-color: var(--accent-color);
-    }
-
-    .card img {
-      width: 100%;
-      aspect-ratio: 2/3;
-      object-fit: cover;
-      background-color: #1a1a1a;
-    }
-
-    .badge-type {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(4px);
-      color: white;
-      font-size: 10px;
-      font-weight: bold;
-      padding: 3px 7px;
-      border-radius: 4px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .card-info {
-      padding: 10px;
-    }
-
-    .card-title {
-      font-size: 13px;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .card-meta {
-      font-size: 11px;
-      color: var(--text-secondary);
-      margin-top: 4px;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .card-actions {
-      display: flex;
-      gap: 4px;
-      padding: 0 8px 8px 8px;
-    }
-
-    .card-btn {
-      flex: 1;
-      padding: 5px;
-      font-size: 11px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .btn-delete {
-      background: #331113;
-      color: #ff4d4d;
-      border: 1px solid #551518;
-    }
-
-    .empty-state {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 50px 20px;
-      color: var(--text-secondary);
-      background: var(--card-bg);
-      border-radius: 12px;
-      border: 1px dashed var(--border-color);
-    }
-
-    .empty-state h3 {
-      color: #fff;
-      margin-bottom: 8px;
-    }
-
-    /* Modal Styling */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(8px);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      overflow-y: auto;
-    }
-
-    .modal-content {
-      background: var(--card-bg);
-      border-radius: 14px;
-      width: 100%;
-      max-width: 550px;
-      padding: 20px;
-      border: 1px solid var(--border-color);
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .modal-title {
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    .close-modal {
-      background: none;
-      border: none;
-      color: var(--text-secondary);
-      font-size: 20px;
-      cursor: pointer;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 12px;
-      color: var(--text-secondary);
-      margin-bottom: 6px;
-      font-weight: 600;
-    }
-
-    .form-control {
-      width: 100%;
-      padding: 10px 12px;
-      background: var(--input-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      color: #fff;
-      font-size: 13px;
-      outline: none;
-    }
-
-    .form-control:focus {
-      border-color: var(--accent-color);
-    }
-
-    textarea.form-control {
-      resize: vertical;
-      min-height: 70px;
-    }
-
-    .episodes-section {
-      background: var(--input-bg);
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid var(--border-color);
-      margin-top: 15px;
-    }
-
-    .episode-item {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 8px;
-      align-items: center;
-    }
-
-    .episode-item input {
-      margin-bottom: 0;
-    }
-
-    .btn-add-ep {
-      background: #222;
-      color: #fff;
-      border: 1px dashed #444;
-      width: 100%;
-      padding: 8px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 12px;
-      margin-top: 8px;
-    }
-
-    .btn-submit {
-      width: 100%;
-      background: var(--accent-color);
-      color: #fff;
-      border: none;
-      padding: 12px;
-      border-radius: 8px;
-      font-weight: bold;
-      font-size: 14px;
-      cursor: pointer;
-      margin-top: 15px;
-      transition: 0.2s;
-    }
-
-    .btn-submit:hover {
-      background: var(--accent-hover);
-    }
-
-    /* Player & Content Modal */
-    .details-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #000;
-      z-index: 1000;
-      flex-direction: column;
-    }
-
-    .details-header {
-      padding: 12px 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #111;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .iframe-container {
-      width: 100%;
-      aspect-ratio: 16/9;
-      background: #000;
-      max-height: 40vh;
-    }
-
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
-    .details-body {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-    }
-
-    .episodes-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .ep-btn {
-      background: var(--card-bg);
-      color: #fff;
-      border: 1px solid var(--border-color);
-      padding: 10px;
-      border-radius: 8px;
-      font-size: 12px;
-      cursor: pointer;
-      text-align: center;
-      font-weight: bold;
-    }
-
-    .ep-btn.active {
-      background: var(--accent-color);
-      border-color: var(--accent-color);
-    }
-
-    .ep-btn:hover {
-      border-color: var(--accent-color);
-    }
+    :root { --bg: #0d0e12; --card: #181a20; --accent: #e50914; --text: #fff; --border: #262932; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding-bottom: 30px; }
+    header { padding: 15px 20px; background: rgba(13, 14, 18, 0.92); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top:0; z-index:10; backdrop-filter: blur(10px); }
+    .logo { font-size: 24px; font-weight: 900; color: var(--accent); letter-spacing: 2px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; padding: 20px; }
+    .card { background: var(--card); border-radius: 8px; overflow: hidden; border: 1px solid var(--border); cursor: pointer; transition: 0.2s; }
+    .card:hover { border-color: var(--accent); transform: translateY(-3px); }
+    .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; background: #121418; }
+    .card-title { font-size: 12px; padding: 8px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; }
+    
+    .player-modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:100; flex-direction: column; }
+    .player-header { padding: 12px 15px; display: flex; justify-content: space-between; background: #111; border-bottom: 1px solid var(--border); }
+    iframe { width: 100%; aspect-ratio: 16/9; border: none; max-height: 40vh; background: #000; }
+    .player-body { padding: 15px; overflow-y: auto; flex:1; }
+    .ep-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; margin-top: 10px; }
+    .ep-btn { background: var(--card); border: 1px solid var(--border); color: #fff; padding: 10px; border-radius: 6px; font-size: 12px; cursor: pointer; text-align: center; font-weight: bold; }
+    .ep-btn.active { background: var(--accent); border-color: var(--accent); }
   </style>
 </head>
 <body>
 
   <header>
-    <a href="#" class="logo">SHOWA</a>
-    <button class="admin-toggle-btn" onclick="openAddModal()">➕ إضافة عمل جديد</button>
+    <div class="logo">SHOWA</div>
   </header>
 
-  <div class="search-container">
-    <input type="text" id="searchInput" class="search-box" placeholder="ابحث عن فيلم أو مسلسل من إضافاتك..." oninput="filterMedia()" />
-  </div>
+  <div class="grid" id="userGrid"></div>
 
-  <div class="categories-bar">
-    <button class="tab-btn active" onclick="switchCategory('all', this)">الكل 🎬</button>
-    <button class="tab-btn" onclick="switchCategory('movie', this)">الأفلام 🍿</button>
-    <button class="tab-btn" onclick="switchCategory('series', this)">المسلسلات 📺</button>
-  </div>
-
-  <div class="section-header">
-    <div class="section-title" id="sectionTitle">جميع الأعمال المضافة</div>
-  </div>
-
-  <div class="grid" id="mediaGrid"></div>
-
-  <!-- Modal: إضافة فيلم / مسلسل -->
-  <div class="modal" id="addModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div class="modal-title">إضافة محتوى جديد</div>
-        <button class="close-modal" onclick="closeAddModal()">✕</button>
-      </div>
-
-      <form id="mediaForm" onsubmit="saveMedia(event)">
-        <div class="form-group">
-          <label>نوع المحتوى</label>
-          <select id="mediaType" class="form-control" onchange="toggleTypeFields()">
-            <option value="movie">فيلم 🎬</option>
-            <option value="series">مسلسل 📺</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>اسم الفيلم / المسلسل *</label>
-          <input type="text" id="mediaTitle" class="form-control" placeholder="مثال: The Dark Knight" required />
-        </div>
-
-        <div class="form-group">
-          <label>رابط صورة البوستر (Poster URL) *</label>
-          <input type="url" id="mediaPoster" class="form-control" placeholder="https://image-link.com/poster.jpg" required />
-        </div>
-
-        <div class="form-group">
-          <label>الوصف / القصة</label>
-          <textarea id="mediaDesc" class="form-control" placeholder="اكتب نبذة عن القصة..."></textarea>
-        </div>
-
-        <!-- حقل الفيلم -->
-        <div id="movieField" class="form-group">
-          <label>رابط تشغيل الفيلم (Embed URL / MP4 / Drive) *</label>
-          <input type="text" id="movieUrl" class="form-control" placeholder="https://... أو رابط مباشر" />
-        </div>
-
-        <!-- حقول المسلسل -->
-        <div id="seriesFields" class="episodes-section" style="display: none;">
-          <label style="color: #fff; font-size: 13px;">الحلقات</label>
-          <div id="episodesList">
-            <div class="episode-item">
-              <input type="text" class="form-control ep-num" placeholder="رقم (1)" style="width: 70px;" value="1" />
-              <input type="text" class="form-control ep-url" placeholder="رابط الحلقة..." />
-            </div>
-          </div>
-          <button type="button" class="btn-add-ep" onclick="addEpisodeInput()">➕ إضافة حلقة أخرى</button>
-        </div>
-
-        <button type="submit" class="btn-submit">حفظ وإضافة للمكتبة 🚀</button>
-      </form>
+  <div class="player-modal" id="playerModal">
+    <div class="player-header">
+      <span id="pTitle" style="font-size: 13px; font-weight: bold;"></span>
+      <button onclick="closePlayer()" style="background:none; border:none; color:#fff; font-size:16px; cursor:pointer;">إغلاق ✕</button>
     </div>
-  </div>
-
-  <!-- Modal: مشاهدة الفيديو الحلقات -->
-  <div class="details-modal" id="detailsModal">
-    <div class="details-header">
-      <span id="playerTitle" style="font-size: 14px; font-weight: bold;"></span>
-      <button class="close-modal" onclick="closePlayer()" style="color: #fff;">إغلاق ✕</button>
-    </div>
-
-    <div class="iframe-container">
-      <iframe id="videoPlayer" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
-    </div>
-
-    <div class="details-body">
-      <h3 id="detailsTitle" style="margin-bottom: 8px;"></h3>
-      <p id="detailsDesc" style="color: var(--text-secondary); font-size: 13px; line-height: 1.5; margin-bottom: 20px;"></p>
-
-      <div id="episodesContainer" style="display: none;">
-        <h4 style="font-size: 14px; border-right: 3px solid var(--accent-color); padding-right: 8px; margin-bottom: 10px;">قائمة الحلقات</h4>
-        <div class="episodes-grid" id="episodesGrid"></div>
+    <iframe id="vPlayer" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+    <div class="player-body">
+      <h3 id="pName"></h3>
+      <p id="pDesc" style="font-size: 12px; color: #aaa; margin-top: 6px; line-height: 1.4;"></p>
+      <div id="epSec" style="display:none; margin-top: 15px;">
+        <h4 style="font-size: 13px; border-right: 3px solid var(--accent); padding-right: 6px;">قائمة الحلقات</h4>
+        <div class="ep-grid" id="epGrid"></div>
       </div>
     </div>
   </div>
 
   <script>
-    let mediaData = JSON.parse(localStorage.getItem('showa_custom_media')) || [];
-    let currentFilter = 'all';
+    const DB_BASE = "https://showa-4ea31-default-rtdb.firebaseio.com";
+    let mediaList = {};
 
-    function saveToStorage() {
-      localStorage.setItem('showa_custom_media', JSON.stringify(mediaData));
-      renderGrid();
-    }
+    async function loadContent() {
+      const res = await fetch(`${DB_BASE}/media.json`);
+      mediaList = await res.json() || {};
+      const grid = document.getElementById('userGrid');
+      grid.innerHTML = '';
 
-    function toggleTypeFields() {
-      const type = document.getElementById('mediaType').value;
-      if (type === 'movie') {
-        document.getElementById('movieField').style.display = 'block';
-        document.getElementById('seriesFields').style.display = 'none';
-      } else {
-        document.getElementById('movieField').style.display = 'none';
-        document.getElementById('seriesFields').style.display = 'block';
-      }
-    }
-
-    function addEpisodeInput(num = '', url = '') {
-      const episodesList = document.getElementById('episodesList');
-      const count = episodesList.children.length + 1;
-      const div = document.createElement('div');
-      div.className = 'episode-item';
-      div.innerHTML = `
-        <input type="text" class="form-control ep-num" placeholder="رقم" style="width: 70px;" value="${num || count}" />
-        <input type="text" class="form-control ep-url" placeholder="رابط الحلقة..." value="${url}" />
-      `;
-      episodesList.appendChild(div);
-    }
-
-    function openAddModal() {
-      document.getElementById('addModal').style.display = 'flex';
-      document.getElementById('mediaForm').reset();
-      document.getElementById('episodesList').innerHTML = '';
-      addEpisodeInput();
-      toggleTypeFields();
-    }
-
-    function closeAddModal() {
-      document.getElementById('addModal').style.display = 'none';
-    }
-
-    function saveMedia(e) {
-      e.preventDefault();
-
-      const type = document.getElementById('mediaType').value;
-      const title = document.getElementById('mediaTitle').value.trim();
-      const poster = document.getElementById('mediaPoster').value.trim();
-      const desc = document.getElementById('mediaDesc').value.trim();
-
-      let item = {
-        id: Date.now(),
-        type,
-        title,
-        poster,
-        desc,
-        createdAt: new Date().toLocaleDateString('ar-EG')
-      };
-
-      if (type === 'movie') {
-        const movieUrl = document.getElementById('movieUrl').value.trim();
-        if (!movieUrl) {
-          alert('يرجى وضع رابط الفيلم!');
-          return;
-        }
-        item.videoUrl = movieUrl;
-      } else {
-        const epNumInputs = document.querySelectorAll('.ep-num');
-        const epUrlInputs = document.querySelectorAll('.ep-url');
-        let episodes = [];
-
-        epNumInputs.forEach((input, index) => {
-          const url = epUrlInputs[index].value.trim();
-          if (url) {
-            episodes.push({
-              number: input.value.trim() || (index + 1),
-              url: url
-            });
-          }
-        });
-
-        if (episodes.length === 0) {
-          alert('يرجى إضافة حلقة واحدة على الأقل بالرابط الخاص بها!');
-          return;
-        }
-        item.episodes = episodes;
-      }
-
-      mediaData.unshift(item);
-      saveToStorage();
-      closeAddModal();
-    }
-
-    function deleteItem(id, event) {
-      event.stopPropagation();
-      if (confirm('هل أنت تأكد من حذف هذا العمل من المكتبة؟')) {
-        mediaData = mediaData.filter(item => item.id !== id);
-        saveToStorage();
-      }
-    }
-
-    function renderGrid() {
-      const mediaGrid = document.getElementById('mediaGrid');
-      mediaGrid.innerHTML = '';
-
-      const query = document.getElementById('searchInput').value.toLowerCase().trim();
-
-      const filtered = mediaData.filter(item => {
-        const matchesCategory = currentFilter === 'all' || item.type === currentFilter;
-        const matchesSearch = item.title.toLowerCase().includes(query);
-        return matchesCategory && matchesSearch;
-      });
-
-      if (filtered.length === 0) {
-        mediaGrid.innerHTML = `
-          <div class="empty-state">
-            <h3>لا يوجد محتوى حالياً 🎬</h3>
-            <p style="font-size: 13px; margin-top: 4px;">اضغط على زر "إضافة عمل جديد" بالأعلى لإضافة أول فيلم أو مسلسل!</p>
-          </div>
-        `;
+      const keys = Object.keys(mediaList);
+      if (keys.length === 0) {
+        grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:50px 20px; color:#aaa; font-size:13px;">لا يوجد أفلام أو مسلسلات متاحة حالياً 🎬</div>';
         return;
       }
 
-      filtered.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.onclick = () => openDetails(item.id);
-
-        const typeBadge = item.type === 'movie' ? 'فيلم' : 'مسلسل';
-
-        card.innerHTML = `
-          <span class="badge-type">${typeBadge}</span>
-          <img src="${item.poster}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/300x450?text=No+Poster'" />
-          <div class="card-info">
+      keys.reverse().forEach(key => {
+        const item = mediaList[key];
+        grid.innerHTML += `
+          <div class="card" onclick="openMedia('${key}')">
+            <img src="${item.poster}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/300x450?text=No+Image'" />
             <div class="card-title">${item.title}</div>
-            <div class="card-meta">
-              <span>${item.type === 'series' ? item.episodes.length + ' حلقة' : 'فيلم HD'}</span>
-            </div>
-          </div>
-          <div class="card-actions">
-            <button class="card-btn btn-delete" onclick="deleteItem(${item.id}, event)">حذف 🗑️</button>
           </div>
         `;
-
-        mediaGrid.appendChild(card);
       });
     }
 
-    function switchCategory(cat, btn) {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentFilter = cat;
-
-      const titleMap = {
-        'all': 'جميع الأعمال المضافة',
-        'movie': 'قائمة الأفلام',
-        'series': 'قائمة المسلسلات'
-      };
-      document.getElementById('sectionTitle').innerText = titleMap[cat];
-
-      renderGrid();
-    }
-
-    function filterMedia() {
-      renderGrid();
-    }
-
-    function openDetails(id) {
-      const item = mediaData.find(m => m.id === id);
-      if (!item) return;
-
-      document.getElementById('detailsTitle').innerText = item.title;
-      document.getElementById('detailsDesc').innerText = item.desc || 'لا يوجد وصف متاح لهذا العمل.';
-      document.getElementById('playerTitle').innerText = item.title;
-
-      const episodesContainer = document.getElementById('episodesContainer');
-      const episodesGrid = document.getElementById('episodesGrid');
-      const videoPlayer = document.getElementById('videoPlayer');
+    function openMedia(key) {
+      const item = mediaList[key];
+      document.getElementById('pName').innerText = item.title;
+      document.getElementById('pDesc').innerText = item.desc || 'لا يوجد وصف متاح.';
+      
+      const epSec = document.getElementById('epSec');
+      const epGrid = document.getElementById('epGrid');
+      const player = document.getElementById('vPlayer');
 
       if (item.type === 'movie') {
-        episodesContainer.style.display = 'none';
-        videoPlayer.src = item.videoUrl;
+        epSec.style.display = 'none';
+        player.src = item.videoUrl;
+        document.getElementById('pTitle').innerText = item.title;
       } else {
-        episodesContainer.style.display = 'block';
-        episodesGrid.innerHTML = '';
-
-        item.episodes.forEach((ep, idx) => {
+        epSec.style.display = 'block';
+        epGrid.innerHTML = '';
+        item.episodes.forEach((ep, i) => {
           const btn = document.createElement('button');
-          btn.className = `ep-btn ${idx === 0 ? 'active' : ''}`;
+          btn.className = `ep-btn ${i === 0 ? 'active' : ''}`;
           btn.innerText = `حلقة ${ep.number}`;
           btn.onclick = () => {
             document.querySelectorAll('.ep-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            videoPlayer.src = ep.url;
-            document.getElementById('playerTitle').innerText = `${item.title} - الحلقة ${ep.number}`;
+            player.src = ep.url;
+            document.getElementById('pTitle').innerText = `${item.title} - الحلقة ${ep.number}`;
           };
-          episodesGrid.appendChild(btn);
+          episodesGrid = epGrid.appendChild(btn);
         });
-
         if (item.episodes.length > 0) {
-          videoPlayer.src = item.episodes[0].url;
-          document.getElementById('playerTitle').innerText = `${item.title} - الحلقة ${item.episodes[0].number}`;
+          player.src = item.episodes[0].url;
+          document.getElementById('pTitle').innerText = `${item.title} - الحلقة ${item.episodes[0].number}`;
         }
       }
 
-      document.getElementById('detailsModal').style.display = 'flex';
+      document.getElementById('playerModal').style.display = 'flex';
     }
 
     function closePlayer() {
-      document.getElementById('detailsModal').style.display = 'none';
-      document.getElementById('videoPlayer').src = '';
+      document.getElementById('playerModal').style.display = 'none';
+      document.getElementById('vPlayer').src = '';
     }
 
-    renderGrid();
+    loadContent();
   </script>
 </body>
 </html>
